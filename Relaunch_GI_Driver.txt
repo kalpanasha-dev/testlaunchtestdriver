@@ -1,0 +1,50 @@
+'---------code to launch executable file(.vbs file)-------------------
+
+'Code to kill QTP process
+
+	Set Wshell=CreateObject("Wscript.Shell")
+	Dim objWMIService,colProcessList
+	Const strComputer="."
+	Set objWMIService=GetObject("winmgmts:"&"{impersonationLevel=impersonate}!\\" & strComputer & "\root\cimv2")
+	Set colProcessList=objWMIService.ExecQuery("Select * FROM Win32_Process WHERE Name='QTPro.exe'")
+	
+	'Object to kill UFT process
+	'Set colProcessList=objWMIService.ExecQuery("Select * FROM Win32_Process WHERE Name='UFT.exe'")
+	
+		For Each objProcess in colProcessList
+			objProcess.terminate()
+		Next
+	Set colProcessList = Nothing
+		
+	Set colProcessList=objWMIService.ExecQuery("Select * FROM Win32_Process WHERE Name='QTAutomationAgent.exe'")
+	
+		For Each objProcess in colProcessList
+			objProcess.terminate()
+		Next
+	Set colProcessList = Nothing
+	Set Wshell=NOTHING
+	
+	' Code to clear the system temporary files
+	
+	Set fso = CreateObject("Scripting.FileSystemObject")
+	Set wshell_temp = createobject("Wscript.Shell")
+	Set temp = fso.GetFolder(wshell_temp.ExpandEnvironmentStrings("%Temp%"))
+	
+	On Error Resume Next
+
+		For Each osubfldr in temp.SubFolders
+
+				fso.DeleteFolder(osubfldr),true
+		Next
+
+	Set fso = NOTHING
+	Set wshell_temp = NOTHING
+	
+	'Code to launch the driver script
+	
+	Set Wshshell = createobject("WScript.Shell")
+	Spath = "S:\Testing_Services\QAAutomation\6_AutomationSuite\AutomationSuite-GI\TestDriver"
+	Wshshell.Run Spath & "\QTP_Launch.vbs",vbtrue
+	Set Wshshell = NOTHING
+	
+Set Wshshell = NOTHING

@@ -1,0 +1,34 @@
+
+'********************************************************************************************
+'Name: QTP_Launch.vbs
+'Description:  Launching QTP, Opening the driver script, Intial folder path setting ,Executes the driver script
+'*************************************************************************************************************
+
+
+
+
+Dim App 'As Application
+
+'set cdobj=createobject("Wscript.Shell")    'To get the current working directory path
+Folder_Path="S:\Testing_Services\QAAutomation\6_AutomationSuite\AutomationSuite-GI"'cdobj.currentdirectory
+DriverScript_Path="S:\Testing_Services\QAAutomation\6_AutomationSuite\AutomationSuite-GI\TestDriver\Driver_Execution_450"
+Set App = CreateObject("QuickTest.Application")
+
+'Launching QTP and Opening the driver script
+App.Launch
+App.Visible = True
+App.WindowState = "Maximized"
+App.Open DriverScript_Path ,True
+
+' Setting the folder path
+App.Folders.RemoveAll
+App.Folders.Add(Folder_Path)
+
+' Executes the opened driver script
+Set qtTest=App.Test
+'qtTest.Settings.Run.OnError = "NextStep"
+qtTest.Run
+
+
+Set qtTest=Nothing
+Set App=Nothing
